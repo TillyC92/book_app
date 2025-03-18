@@ -1,0 +1,69 @@
+<!-- templates/filtered_books.html - Filter results -->
+{% extends "layout.html" %}
+
+{% block title %}Filtered Books{% endblock %}
+
+{% block content %}
+    <h2>Filtered Books</h2>
+    
+    <div class="filter-options">
+        <form action="{{ url_for('filter_books') }}" method="get">
+            <div style="display: flex; gap: 10px;">
+                <div>
+                    <label for="status">Status:</label>
+                    <select id="status" name="status">
+                        <option value="">All</option>
+                        <option value="Want to Read" {% if status == 'Want to Read' %}selected{% endif %}>Want to Read</option>
+                        <option value="Currently Reading" {% if status == 'Currently Reading' %}selected{% endif %}>Currently Reading</option>
+                        <option value="Read" {% if status == 'Read' %}selected{% endif %}>Read</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="genre">Genre:</label>
+                    <select id="genre" name="genre">
+                        <option value="">All</option>
+                        {% for g in genres %}
+                            <option value="{{ g.genre }}" {% if genre == g.genre %}selected{% endif %}>{{ g.genre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div>
+                    <button type="submit">Apply Filters</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    {% if books %}
+        <div class="book-grid">
+            {% for book in books %}
+                <div class="book-card">
+                    {% if book.cover_url %}
+                        <img src="{{ book.cover_url }}" alt="{{ book.title }} cover">
+                    {% else %}
+                        <div style="height: 150px; background-color: #ddd; display: flex; justify-content: center; align-items: center;">
+                            <span>No Cover</span>
+                        </div>
+                    {% endif %}
+                    
+                    <h3><a href="{{ url_for('book_details', book_id=book.id) }}">{{ book.title }}</a></h3>
+                    <p>By {{ book.author }}</p>
+                    
+                    {% if book.status %}
+                        <span class="book-status {% if book.status == 'Read' %}status-read{% elif book.status == 'Currently Reading' %}status-reading{% else %}status-want{% endif %}">
+                            {{ book.status }}
+                        </span>
+                    {% endif %}
+                    
+                    {% if book.rating %}
+                        <p>{{ book.rating|star_rating }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No books match the selected filters.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,39 @@
+<!-- templates/update_status.html - Update reading status form -->
+{% extends "layout.html" %}
+
+{% block title %}Update Status: {{ book.title }}{% endblock %}
+
+{% block content %}
+    <h2>Update Reading Status</h2>
+    <h3>{{ book.title }}</h3>
+    
+    <form method="post">
+        <div class="form-group">
+            <label for="status">Reading Status</label>
+            <select id="status" name="status">
+                <option value="Want to Read" {% if reading_status and reading_status.status == 'Want to Read' %}selected{% endif %}>Want to Read</option>
+                <option value="Currently Reading" {% if reading_status and reading_status.status == 'Currently Reading' %}selected{% endif %}>Currently Reading</option>
+                <option value="Read" {% if reading_status and reading_status.status == 'Read' %}selected{% endif %}>Read</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="rating">Rating</label>
+            <select id="rating" name="rating">
+                <option value="" {% if not reading_status or not reading_status.rating %}selected{% endif %}>Not rated</option>
+                <option value="1" {% if reading_status and reading_status.rating == 1 %}selected{% endif %}>1 star</option>
+                <option value="2" {% if reading_status and reading_status.rating == 2 %}selected{% endif %}>2 stars</option>
+                <option value="3" {% if reading_status and reading_status.rating == 3 %}selected{% endif %}>3 stars</option>
+                <option value="4" {% if reading_status and reading_status.rating == 4 %}selected{% endif %}>4 stars</option>
+                <option value="5" {% if reading_status and reading_status.rating == 5 %}selected{% endif %}>5 stars</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" rows="4">{{ reading_status.notes if reading_status else '' }}</textarea>
+        </div>
+        
+        <button type="submit">Update Status</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,39 @@
+<!-- templates/search_results.html - Search results -->
+{% extends "layout.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+    <h2>Search Results for "{{ query }}"</h2>
+    
+    {% if books %}
+        <div class="book-grid">
+            {% for book in books %}
+                <div class="book-card">
+                    {% if book.cover_url %}
+                        <img src="{{ book.cover_url }}" alt="{{ book.title }} cover">
+                    {% else %}
+                        <div style="height: 150px; background-color: #ddd; display: flex; justify-content: center; align-items: center;">
+                            <span>No Cover</span>
+                        </div>
+                    {% endif %}
+                    
+                    <h3><a href="{{ url_for('book_details', book_id=book.id) }}">{{ book.title }}</a></h3>
+                    <p>By {{ book.author }}</p>
+                    
+                    {% if book.status %}
+                        <span class="book-status {% if book.status == 'Read' %}status-read{% elif book.status == 'Currently Reading' %}status-reading{% else %}status-want{% endif %}">
+                            {{ book.status }}
+                        </span>
+                    {% endif %}
+                    
+                    {% if book.rating %}
+                        <p>{{ book.rating|star_rating }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No books found matching your search.</p>
+    {% endif %}
+{% endblock %}

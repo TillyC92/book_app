@@ -1,0 +1,81 @@
+<!-- templates/book_details.html - Single book details -->
+{% extends "layout.html" %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+    <div class="book-details">
+        <div style="display: flex; gap: 20px;">
+            <div style="flex: 0 0 200px;">
+                {% if book.cover_url %}
+                    <img src="{{ book.cover_url }}" alt="{{ book.title }} cover" style="max-width: 100%;">
+                {% else %}
+                    <div style="height: 300px; width: 200px; background-color: #ddd; display: flex; justify-content: center; align-items: center;">
+                        <span>No Cover</span>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div style="flex: 1;">
+                <h2>{{ book.title }}</h2>
+                <p><strong>Author:</strong> {{ book.author }}</p>
+                
+                {% if book.isbn %}
+                    <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+                {% endif %}
+                
+                {% if book.publication_year %}
+                    <p><strong>Published:</strong> {{ book.publication_year }}</p>
+                {% endif %}
+                
+                {% if book.publisher %}
+                    <p><strong>Publisher:</strong> {{ book.publisher }}</p>
+                {% endif %}
+                
+                {% if book.genre %}
+                    <p><strong>Genre:</strong> {{ book.genre }}</p>
+                {% endif %}
+                
+                {% if book.page_count %}
+                    <p><strong>Pages:</strong> {{ book.page_count }}</p>
+                {% endif %}
+                
+                <p><strong>Status:</strong> 
+                    <span class="book-status {% if book.status == 'Read' %}status-read{% elif book.status == 'Currently Reading' %}status-reading{% else %}status-want{% endif %}">
+                        {{ book.status or 'Not set' }}
+                    </span>
+                </p>
+                
+                {% if book.rating %}
+                    <p><strong>Rating:</strong> {{ book.rating|star_rating }}</p>
+                {% endif %}
+                
+                {% if book.start_date %}
+                    <p><strong>Started:</strong> {{ book.start_date }}</p>
+                {% endif %}
+                
+                {% if book.finish_date %}
+                    <p><strong>Finished:</strong> {{ book.finish_date }}</p>
+                {% endif %}
+                
+                <a href="{{ url_for('update_status', book_id=book.id) }}">
+                    <button>Update Reading Status</button>
+                </a>
+            </div>
+        </div>
+        
+        {% if book.description %}
+            <div style="margin-top: 20px;">
+                <h3>Description</h3>
+                <p>{{ book.description }}</p>
+            </div>
+        {% endif %}
+        
+        {% if book.notes %}
+            <div style="margin-top: 20px;">
+                <h3>My Notes</h3>
+                <p>{{ book.notes }}</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
